@@ -1,0 +1,38 @@
+<?php
+require_once('QuantikGame.php');
+require_once('QuantikUIGenerator.php'); 
+
+session_start();
+
+if (isset($_SESSION['plateau']) )
+{
+    $plateau = new PlateauQuantik();
+    if(!isset($_SESSION['plateau']))
+    {
+        $_SESSION['plateau'] = $plateau ;
+    }
+
+
+    /// Création d'ensembles de pièces blanches et noires
+    $tableauBlanc = ArrayPieceQuantik::initPiecesBlanches();
+    if (!isset($_SESSION['tableauBlanc']))
+    {
+        $_SESSION['tableauBlanc']=$tableauBlanc;
+    }
+
+    $tableauNoir = ArrayPieceQuantik::initPiecesNoires();
+    if(!isset($_SESSION['tableauNoir']))
+    {
+        $_SESSION['tableauNoir']=$tableauNoir ;
+    }
+
+    // Création du jeu Quantik avec le plateau et les pièces
+    $quantik = new QuantikGame($plateau, $tableauBlanc, $tableauNoir, array(PieceQuantik::BLACK));
+
+    echo QuantikUIGenerator::getPagePosePiece($quantik ,  PieceQuantik::BLACK  , $_SESSION['pieceSelectionnee']) ;
+}
+else
+{
+    QuantikUIGenerator::getPageErreur("Aucune Pièce selectionnée  " , "ChoixPieceNoire.php") ;
+}
+?>
